@@ -61,7 +61,11 @@ class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
                 onDeleteClickListener?.let { it(data) }
             }
         }
-
+        holder.imageViewShare.apply {
+            setOnClickListener {
+                onShareClickListener?.let { it(data) }
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -72,11 +76,17 @@ class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
 
     private var onDeleteClickListener : ((Data) -> Unit)? = null
 
+    private var onShareClickListener : ((Data) -> Unit)? = null
+
     fun setOnItemClickListener(listener: (Data) -> Unit) {
         onItemClickListener = listener
     }
 
     fun setOnDeleteClick(listener: (Data) -> Unit) {
         onDeleteClickListener = listener
+    }
+
+    fun setOnShareClick(listener: (Data) -> Unit) {
+        onShareClickListener = listener
     }
 }

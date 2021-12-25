@@ -1,10 +1,10 @@
 package com.example.task.ui
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -115,6 +115,15 @@ class MainActivity : AppCompatActivity() {
 
         dataAdapter.setOnDeleteClick {
             viewModel.deleteData(it)
+        }
+
+        dataAdapter.setOnShareClick {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(it.image))
+            intent.putExtra(Intent.EXTRA_TEXT, it.description)
+            intent.putExtra(Intent.EXTRA_SUBJECT, it.title)
+            intent.setType("image/png")
+            startActivity(Intent.createChooser(intent, "Share Via"))
         }
 
         fabAddNewData.setOnClickListener {
