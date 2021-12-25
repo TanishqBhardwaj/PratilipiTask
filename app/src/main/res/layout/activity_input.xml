@@ -45,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextDescription"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:src="@mipmap/ic_launcher" />
 
     <Button
         android:id="@+id/buttonSave"

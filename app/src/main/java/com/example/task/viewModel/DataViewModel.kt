@@ -14,5 +14,13 @@ class DataViewModel (
         dataRepository.insert(data)
     }
 
+    fun updateData(data: Data) = viewModelScope.launch {
+        dataRepository.update(data)
+    }
+
+    fun deleteData(data: Data) = viewModelScope.launch {
+        dataRepository.delete(data)
+    }
+
     fun getAllData() = dataRepository.getAllData()
 }

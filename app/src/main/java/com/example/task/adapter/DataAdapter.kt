@@ -1,5 +1,6 @@
 package com.example.task.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,8 @@ class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
         val imageView: ImageView = itemView.findViewById(R.id.imageViewIcon)
         val textTitle: TextView = itemView.findViewById(R.id.textViewTitle)
         val textDescription: TextView = itemView.findViewById(R.id.textViewDescription)
+        val imageViewDelete: ImageView = itemView.findViewById(R.id.imageViewDelete)
+        val imageViewShare: ImageView = itemView.findViewById(R.id.imageViewShare)
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<Data>() {
@@ -45,15 +48,20 @@ class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
 
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
         val data = differ.currentList[position]
+        holder.textTitle.text = data.title
+        holder.textDescription.text = data.description
         holder.itemView.apply {
             Glide.with(this).load(data.image).into(holder.imageView)
-            holder.textTitle.text = data.title
-            holder.textDescription.text = data.description
-
             setOnClickListener {
                 onItemClickListener?.let { it(data) }
             }
         }
+        holder.imageViewDelete.apply {
+            setOnClickListener {
+                onDeleteClickListener?.let { it(data) }
+            }
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -62,7 +70,13 @@ class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
 
     private var onItemClickListener: ((Data) -> Unit)? = null
 
+    private var onDeleteClickListener : ((Data) -> Unit)? = null
+
     fun setOnItemClickListener(listener: (Data) -> Unit) {
         onItemClickListener = listener
+    }
+
+    fun setOnDeleteClick(listener: (Data) -> Unit) {
+        onDeleteClickListener = listener
     }
 }

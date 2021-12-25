@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -37,6 +38,11 @@ class MainActivity : AppCompatActivity() {
 
         setView()
         setListeners()
+        setDataList()
+    }
+
+    override fun onResume() {
+        super.onResume()
         setDataList()
     }
 
@@ -103,11 +109,12 @@ class MainActivity : AppCompatActivity() {
 
         dataAdapter.setOnItemClickListener {
             val intent = Intent(this, InputActivity::class.java)
-            intent.putExtra(InputActivity.TITLE, it.title)
-            intent.putExtra(InputActivity.DESCRIPTION, it.description)
-            intent.putExtra(InputActivity.IMAGE, it.image)
-            intent.putExtra(InputActivity.ID, it.id)
+            intent.putExtra("data", it)
             startActivity(intent)
+        }
+
+        dataAdapter.setOnDeleteClick {
+            viewModel.deleteData(it)
         }
 
         fabAddNewData.setOnClickListener {
@@ -118,9 +125,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setDataList() {
         viewModel.getAllData().observe(this, Observer { dataList ->
+            this.dataList.clear()
+            this.tempDataList.clear()
             this.dataList.addAll(dataList.reversed())
             this.tempDataList.addAll(this.dataList)
-            dataAdapter.differ.submitList(tempDataList)
+            dataAdapter.differ.submitList(this.dataList.distinct())
         })
     }
 }

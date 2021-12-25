@@ -9,5 +9,9 @@ class DataRepository (
 
     suspend fun insert(data: Data) = db.dataDao().insertData(data)
 
+    suspend fun update(data: Data) = db.dataDao().updateData(data)
+
+    suspend fun delete(data: Data) = db.dataDao().deleteData(data)
+
     fun getAllData() = db.dataDao().getAllData()
 }
