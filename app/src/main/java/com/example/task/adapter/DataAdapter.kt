@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,9 @@ import com.bumptech.glide.Glide
 import com.example.task.R
 import com.example.task.local.Data
 
-class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
+class DataAdapter : PagingDataAdapter<Data, DataAdapter.DataViewHolder>(
+    differCallback
+) {
 
     inner class DataViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 
@@ -24,13 +27,15 @@ class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
         val imageViewShare: ImageView = itemView.findViewById(R.id.imageViewShare)
     }
 
-    private val differCallback = object : DiffUtil.ItemCallback<Data>() {
-        override fun areItemsTheSame(oldItem: Data, newItem: Data): Boolean {
-            return oldItem.id == newItem.id
-        }
+    companion object {
+        val differCallback = object : DiffUtil.ItemCallback<Data>() {
+            override fun areItemsTheSame(oldItem: Data, newItem: Data): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-        override fun areContentsTheSame(oldItem: Data, newItem: Data): Boolean {
-            return oldItem == newItem
+            override fun areContentsTheSame(oldItem: Data, newItem: Data): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 
@@ -47,7 +52,7 @@ class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
-        val data = differ.currentList[position]
+        val data = getItem(position)!!
         holder.textTitle.text = data.title
         holder.textDescription.text = data.description
         holder.itemView.apply {
@@ -68,9 +73,9 @@ class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
         }
     }
 
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
+//    override fun getItemCount(): Int {
+//        return differ.currentList.size
+//    }
 
     private var onItemClickListener: ((Data) -> Unit)? = null
 

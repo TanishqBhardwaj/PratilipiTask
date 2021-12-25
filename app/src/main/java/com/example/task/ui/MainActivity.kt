@@ -8,6 +8,7 @@ import android.view.Menu
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task.R
@@ -18,6 +19,8 @@ import com.example.task.repository.DataRepository
 import com.example.task.viewModel.DataViewModel
 import com.example.task.viewModel.DataViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -133,12 +136,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setDataList() {
-        viewModel.getAllData().observe(this, Observer { dataList ->
-            this.dataList.clear()
-            this.tempDataList.clear()
-            this.dataList.addAll(dataList.reversed())
-            this.tempDataList.addAll(this.dataList)
-            dataAdapter.differ.submitList(this.dataList.distinct())
-        })
+//        viewModel.getAllData().observe(this, Observer { dataList ->
+//            this.dataList.clear()
+//            this.tempDataList.clear()
+//            this.dataList.addAll(dataList.reversed())
+//            this.tempDataList.addAll(this.dataList)
+//            dataAdapter.differ.submitList(this.dataList.distinct())
+//        })
+
+        lifecycleScope.launch {
+            viewModel.dataList.collect {
+                dataAdapter.submitData(it)
+            }
+        }
     }
 }
