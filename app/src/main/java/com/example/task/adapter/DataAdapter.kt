@@ -3,8 +3,6 @@ package com.example.task.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -14,10 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.task.R
 import com.example.task.local.Data
 
-class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>(), Filterable {
-
-    var dataList: ArrayList<Data> = ArrayList()
-    var dataListFiltered: ArrayList<Data> = ArrayList()
+class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
 
     inner class DataViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 
@@ -69,35 +64,5 @@ class DataAdapter : RecyclerView.Adapter<DataAdapter.DataViewHolder>(), Filterab
 
     fun setOnItemClickListener(listener: (Data) -> Unit) {
         onItemClickListener = listener
-    }
-
-    override fun getFilter(): Filter {
-        return object : Filter() {
-            override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charString = constraint?.toString() ?: ""
-                if (charString.isEmpty()) dataListFiltered = dataList else {
-                    val filteredList = ArrayList<Data>()
-                    dataList
-                        .filter {
-                            (it.id.(constraint!!)) or
-                                    (it.author.contains(constraint))
-
-                        }
-                        .forEach { filteredList.add(it) }
-                    photosListFiltered = filteredList
-
-                }
-                return FilterResults().apply { values = photosListFiltered }
-            }
-
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-
-                photosListFiltered = if (results?.values == null)
-                    ArrayList()
-                else
-                    results.values as ArrayList<Photos>
-                notifyDataSetChanged()
-            }
-        }
     }
 }
